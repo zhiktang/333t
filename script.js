@@ -1,11 +1,16 @@
 // Get DOM elements
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
-const imagePreview = document.getElementById('imagePreview');
+const imagePreview1 = document.getElementById('imagePreview1');
+const imagePreview2 = document.getElementById('imagePreview2');
 const loadingScreen = document.querySelector('.loading-screen');
 const uploadInterface = document.getElementById('uploadInterface');
 const previewInterface = document.getElementById('previewInterface');
 const newUploadBtn = document.getElementById('newUploadBtn');
+const saveBtn = document.getElementById('saveBtn');
+
+// Store the original filename
+let originalFilename = '';
 
 // Handle click to upload
 dropZone.addEventListener('click', () => {
@@ -39,6 +44,11 @@ newUploadBtn.addEventListener('click', () => {
     switchToUploadInterface();
 });
 
+// Handle save button click
+saveBtn.addEventListener('click', () => {
+    downloadImage(imagePreview1.src);
+});
+
 /**
  * Handles the file upload process
  * @param {FileList} files - The files from the input or drop event
@@ -48,12 +58,16 @@ function handleFiles(files) {
         const file = files[0];
         if (file.type.startsWith('image/')) {
             loadingScreen.style.display = 'flex';
+            // Store the original filename
+            originalFilename = file.name;
             
             // Simulate loading time
             setTimeout(() => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    imagePreview.src = e.target.result;
+                    // Set the same image source for both preview elements
+                    imagePreview1.src = e.target.result;
+                    imagePreview2.src = e.target.result;
                     switchToPreviewInterface();
                     loadingScreen.style.display = 'none';
                 };
@@ -63,6 +77,24 @@ function handleFiles(files) {
             alert('Please upload an image file');
         }
     }
+}
+
+/**
+ * Downloads the image
+ * @param {string} imageUrl - The data URL of the image
+ */
+function downloadImage(imageUrl) {
+    const link = document.createElement('a');
+    
+    // Get file extension from original filename or default to .png
+    const fileExtension = originalFilename ? `.${originalFilename.split('.').pop()}` : '.png';
+    const filename = `image_${Date.now()}${fileExtension}`;
+    
+    link.href = imageUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 /**
