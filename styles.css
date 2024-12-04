@@ -134,21 +134,21 @@ body {
 }
 
 .upload-new-btn {
-    background-color: #4CAF50;
+    background-color: #ac4caf;
     color: white;
 }
 
 .upload-new-btn:hover {
-    background-color: #45a049;
+    background-color: #8345a0;
 }
 
 .save-btn {
-    background-color: #2196F3;
+    background-color: #ac4caf;
     color: white;
 }
 
 .save-btn:hover {
-    background-color: #1976D2;
+    background-color: #8345a0;
 }
 
 #previewInterface {
