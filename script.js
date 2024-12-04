@@ -3,6 +3,9 @@ const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const imagePreview = document.getElementById('imagePreview');
 const loadingScreen = document.querySelector('.loading-screen');
+const uploadInterface = document.getElementById('uploadInterface');
+const previewInterface = document.getElementById('previewInterface');
+const newUploadBtn = document.getElementById('newUploadBtn');
 
 // Handle click to upload
 dropZone.addEventListener('click', () => {
@@ -31,6 +34,11 @@ fileInput.addEventListener('change', (e) => {
     handleFiles(e.target.files);
 });
 
+// Handle new upload button click
+newUploadBtn.addEventListener('click', () => {
+    switchToUploadInterface();
+});
+
 /**
  * Handles the file upload process
  * @param {FileList} files - The files from the input or drop event
@@ -46,7 +54,7 @@ function handleFiles(files) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block';
+                    switchToPreviewInterface();
                     loadingScreen.style.display = 'none';
                 };
                 reader.readAsDataURL(file);
@@ -55,4 +63,30 @@ function handleFiles(files) {
             alert('Please upload an image file');
         }
     }
+}
+
+/**
+ * Switches to the preview interface
+ */
+function switchToPreviewInterface() {
+    uploadInterface.classList.add('hidden');
+    previewInterface.classList.remove('hidden');
+    // Small delay to trigger the fade-in animation
+    setTimeout(() => {
+        previewInterface.classList.add('visible');
+    }, 50);
+}
+
+/**
+ * Switches back to the upload interface
+ */
+function switchToUploadInterface() {
+    previewInterface.classList.remove('visible');
+    // Wait for fade-out animation to complete
+    setTimeout(() => {
+        previewInterface.classList.add('hidden');
+        uploadInterface.classList.remove('hidden');
+        // Clear the file input
+        fileInput.value = '';
+    }, 300);
 }

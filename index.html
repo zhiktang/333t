@@ -8,12 +8,18 @@
 </head>
 <body>
     <div class="container">
-        <h1>Image Upload</h1>
-        <div class="upload-area" id="dropZone">
-            <p>Drag and drop an image here or click to select</p>
-            <input type="file" id="fileInput" class="file-input" accept="image/*">
+        <div id="uploadInterface">
+            <h1>Image Upload</h1>
+            <div class="upload-area" id="dropZone">
+                <p>Drag and drop an image here or click to select</p>
+                <input type="file" id="fileInput" class="file-input" accept="image/*">
+            </div>
         </div>
-        <img id="imagePreview" alt="Preview">
+        
+        <div id="previewInterface" class="hidden">
+            <img id="imagePreview" alt="Preview">
+            <button id="newUploadBtn" class="upload-new-btn">Upload New Picture</button>
+        </div>
     </div>
 
     <div class="loading-screen">
