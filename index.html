@@ -1,1 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Preview</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
+        }
 
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            padding: 2rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #666;
+            background-color: #f8f9fa;
+        }
+
+        .upload-area.dragover {
+            border-color: #4CAF50;
+            background-color: #e8f5e9;
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            max-height: 400px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Upload</h1>
+        <div class="upload-area" id="dropZone">
+            <p>Drag and drop an image here or click to select</p>
+            <input type="file" id="fileInput" class="file-input" accept="image/*">
+        </div>
+        <img id="imagePreview" alt="Preview">
+    </div>
+
+    <div class="loading-screen">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const loadingScreen = document.querySelector('.loading-screen');
+
+        // Handle click to upload
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Handle drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        // Handle file input change
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    loadingScreen.style.display = 'flex';
+                    
+                    // Simulate loading time
+                    setTimeout(() => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            imagePreview.src = e.target.result;
+                            imagePreview.style.display = 'block';
+                            loadingScreen.style.display = 'none';
+                        };
+                        reader.readAsDataURL(file);
+                    }, 1500); // 1.5 second loading simulation
+                } else {
+                    alert('Please upload an image file');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
